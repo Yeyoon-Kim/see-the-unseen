@@ -1,16 +1,10 @@
 import { CalendarDays, Home, Menu, Palette, Settings, Timer } from "lucide-react";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { AuthButton } from "../features/auth/AuthButton";
 import { brand } from "../config/brand";
 import { usePreferences, type TranslationKey } from "../features/preferences/preferences";
 import { Sidebar } from "./Sidebar";
-
-const mobileLinks = [
-  ["/", "nav.dashboard"],
-  ["/courses", "nav.fixedSchedule"],
-  ["/theme", "nav.theme"],
-  ["/settings", "nav.settings"]
-] satisfies Array<[string, TranslationKey]>;
 
 const bottomLinks = [
   { to: "/", labelKey: "nav.dashboard", icon: Home },
@@ -22,36 +16,50 @@ const bottomLinks = [
 
 export function AppLayout() {
   const { t } = usePreferences();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen]);
 
   return (
-    <div className="min-h-screen bg-paper md:flex">
-      <Sidebar />
+    <div className="min-h-screen bg-paper">
+      {isMenuOpen && (
+        <button
+          type="button"
+          className="fixed inset-0 z-30 bg-black/20"
+          aria-label="메뉴 닫기"
+          onMouseDown={() => setIsMenuOpen(false)}
+          onClick={() => setIsMenuOpen(false)}
+        />
+      )}
+      {isMenuOpen && <Sidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />}
       <div className="min-w-0 flex-1">
-        <header className="sticky top-0 z-10 border-b border-line bg-white/95 px-4 py-3 backdrop-blur md:hidden">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-2 font-bold">
+        <header className="sticky top-0 z-20 border-b border-line bg-white/95 px-4 py-3 backdrop-blur md:px-8">
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              className="flex min-h-11 min-w-0 items-center gap-2 rounded-md px-2 text-left font-bold transition hover:bg-slate-50"
+              aria-label="메뉴 열기"
+              aria-expanded={isMenuOpen}
+              onClick={() => setIsMenuOpen(true)}
+            >
               <Menu size={18} />
-              <span className="truncate">{brand.shortName}</span>
-            </div>
+              <span className="truncate">{brand.fullName}</span>
+            </button>
             <div className="w-28">
               <AuthButton />
             </div>
           </div>
-          <nav className="flex gap-2 overflow-x-auto pb-1">
-            {mobileLinks.map(([to, labelKey]) => (
-              <NavLink
-                key={to}
-                to={to}
-                className={({ isActive }) =>
-                  `whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-semibold ${
-                    isActive ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-700"
-                  }`
-                }
-              >
-                {t(labelKey)}
-              </NavLink>
-            ))}
-          </nav>
         </header>
         <main className="mx-auto w-full max-w-7xl px-4 pb-24 pt-5 md:px-8 md:py-8">
           <Outlet />

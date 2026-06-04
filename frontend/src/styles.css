@@ -154,6 +154,19 @@ textarea {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawer-panel {
+  animation: drawer-in 180ms ease-out;
+}
+
 @media (min-width: 768px) {
   :root {
     --space-page-x: 2rem;
