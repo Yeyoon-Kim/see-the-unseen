@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --app-bg: #f8f7f4;
+  --app-large: #ffffff;
+  --app-card: #ffffff;
+  --app-medium: #f2f0ea;
+  --app-small: #e7e3d8;
+  --app-accent: #f2f0ea;
+  --app-accent-bg: #f2f0ea;
+  --app-strong: #5e6b73;
+  --app-on-strong: #ffffff;
+  --app-text: #111111;
+  --app-secondary-text: #333333;
+  --app-disabled-text: #666666;
+  --app-muted: #333333;
+  --app-border: #d8d4cb;
+  --space-page-x: 1rem;
+  --space-page-y: 1.25rem;
+  --space-card: 1rem;
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.field {
+  @apply w-full rounded-md border border-line bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100;
+  background-color: var(--app-large);
+  border-color: var(--app-border);
+  color: var(--app-text);
+  border-radius: var(--radius-control);
+  min-height: 44px;
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50;
+  background-color: var(--app-strong);
+  color: var(--app-on-strong);
+  border-radius: var(--radius-control);
+  min-height: 44px;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-blue-300 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50;
+  background-color: var(--app-large);
+  border-color: var(--app-border);
+  color: var(--app-text);
+  border-radius: var(--radius-control);
+  min-height: 44px;
+}
+
+.btn-danger {
+  @apply inline-flex items-center justify-center gap-2 rounded-md border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50;
+  border-radius: var(--radius-control);
+  min-height: 44px;
+}
+
+.card {
+  @apply rounded-lg border border-line bg-white p-4 shadow-soft;
+  background-color: var(--app-large);
+  border-color: var(--app-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-card);
+}
+
+.bg-paper {
+  background-color: var(--app-bg) !important;
+}
+
+.bg-white,
+.bg-white\/95 {
+  background-color: var(--app-large) !important;
+}
+
+.bg-blue-600 {
+  background-color: var(--app-strong) !important;
+}
+
+.bg-blue-700 {
+  background-color: var(--app-strong) !important;
+}
+
+.bg-blue-50 {
+  background-color: var(--app-small) !important;
+}
+
+.bg-slate-50 {
+  background-color: var(--app-medium) !important;
+}
+
+.bg-slate-100 {
+  background-color: var(--app-small) !important;
+}
+
+.text-blue-600,
+.text-blue-700,
+.text-ink {
+  color: var(--app-strong) !important;
+}
+
+.text-slate-500,
+.text-slate-600,
+.text-slate-700 {
+  color: var(--app-secondary-text) !important;
+}
+
+.text-slate-400 {
+  color: var(--app-disabled-text) !important;
+}
+
+.text-slate-900,
+.text-ink {
+  color: var(--app-text) !important;
+}
+
+.border-line,
+.border-blue-300,
+.border-blue-600 {
+  border-color: var(--app-border) !important;
+}
+
+.border-blue-600.bg-blue-600,
+.btn-primary {
+  border-color: var(--app-strong) !important;
+}
+
+.text-white {
+  color: var(--app-on-strong) !important;
+}
+
+.mobile-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --space-page-x: 2rem;
+    --space-page-y: 2rem;
+    --space-card: 1.125rem;
+  }
+}

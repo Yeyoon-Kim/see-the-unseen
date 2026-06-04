@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id            String         @id @default(cuid())
+  courseName    String
+  professorName String?
+  semester      String?
+  classTime     String?
+  classroom     String?
+  courseType    String         @default("undergraduate")
+  color         String         @default("#5E6B73")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  assignments   Assignment[]
+  exams         Exam[]
+  presentations Presentation[]
+  readings      ReadingItem[]
+  materials     Material[]
+  scheduleItems ScheduleItem[]
+  tasks         Task[]
+  uploadedFiles UploadedFile[]
+  notices       CourseNotice[]
+}
+
+model Assignment {
+  id               String   @id @default(cuid())
+  courseId         String
+  title            String
+  description      String?
+  dueDate          DateTime?
+  submissionFormat String?
+  priority         String?  @default("medium")
+  tag              String?
+  status           String   @default("not_started")
+  completionTotal  Int?
+  completionLeft   Int?
+  sourceType       String   @default("manual")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  tasks  Task[]
+}
+
+model Exam {
+  id        String   @id @default(cuid())
+  courseId  String
+  title     String
+  examDate  DateTime?
+  scope     String?
+  format    String?
+  weight    Int?
+  studyPlan String?
+  status    String   @default("not_started")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  tasks  Task[]
+}
+
+model Presentation {
+  id               String   @id @default(cuid())
+  courseId         String
+  title            String
+  presentationDate DateTime?
+  topic            String?
+  teamMembers      String?
+  myRole           String?
+  checklist        String?
+  status           String   @default("not_started")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  tasks  Task[]
+}
+
+model ReadingItem {
+  id            String   @id @default(cuid())
+  courseId      String
+  title         String
+  authors       String?
+  year          String?
+  source        String?
+  dueDate       DateTime?
+  readingStatus String   @default("not_started")
+  summary       String?
+  keyQuestions  String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  tasks  Task[]
+}
+
+model Material {
+  id         String   @id @default(cuid())
+  courseId   String
+  title      String
+  fileName   String?
+  fileType   String?
+  filePath   String?
+  uploadedAt DateTime @default(now())
+  aiSummary  String?
+  tags       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model ScheduleItem {
+  id          String    @id @default(cuid())
+  courseId    String
+  title       String
+  type        String
+  startsAt    DateTime?
+  endsAt      DateTime?
+  description String?
+  sourceModel String?
+  sourceId    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id             String   @id @default(cuid())
+  courseId       String?
+  assignmentId   String?
+  examId         String?
+  presentationId String?
+  readingItemId  String?
+  title          String
+  status         String   @default("not_started")
+  dueDate        DateTime?
+  priority       String?
+  tag            String?
+  completionTotal Int?
+  completionLeft  Int?
+  sourceType     String   @default("manual")
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  course       Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  assignment   Assignment?   @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  exam         Exam?         @relation(fields: [examId], references: [id], onDelete: Cascade)
+  presentation Presentation? @relation(fields: [presentationId], references: [id], onDelete: Cascade)
+  readingItem  ReadingItem?  @relation(fields: [readingItemId], references: [id], onDelete: Cascade)
+}
+
+model UploadedFile {
+  id            String   @id @default(cuid())
+  courseId      String?
+  originalName  String
+  storedName    String
+  mimeType      String
+  size          Int
+  path          String?
+  extractedText String?
+  sourceType    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+}
+
+model CourseNotice {
+  id             String   @id @default(cuid())
+  courseId       String
+  title          String
+  body           String?
+  sourceType     String   @default("screenshot")
+  extractedText  String?
+  uploadedFileId String?
+  postedAt       DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
